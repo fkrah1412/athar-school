@@ -1,43 +1,130 @@
-<section id="sections">
-  <div class="section-title">
-    <h2>مساحات أثَر</h2>
-    <p>اختاري المساحة التي تناسبك وابدئي رحلتك.</p>
-  </div>
-  <div class="grid">
-    <article class="card">
-      <div class="icon">💜</div>
-      <h3>لحظات ملهمة</h3>
-      <p>مساحة للحوار الودي، والامتنان، وتبادل الخبرات والكلمات الطيبة.</p>
-      <a class="button" href="#participate">اكتبي مشاركتك</a>
-    </article>
-    <article class="card">
-      <div class="icon">🌷</div>
-      <h3>الرفاه والصحة المهنية</h3>
-      <p>اكتشفي ممارسات بسيطة تساعدك على التوازن النفسي والمهني.</p>
-      <a class="button" href="#about">اكتشفي المزيد</a>
-    </article>
-    <article class="card">
-      <div class="icon">💌</div>
-      <h3>رسالة تقدير</h3>
-      <p>رسائل إيجابية تترك أثرًا جميلًا، وتذكّرنا بقيمة بعضنا.</p>
-      <a class="button" href="#participate">أرسلي رسالة</a>
-    </article>
-  </div>
-</section>
-
-<section id="about">
-  <div class="quote">
-    «قد لا نعرف حجم الأثر الذي نتركه، لكن الكلمة الطيبة تبقى.»
+<section class="soft" id="wellbeing-details">
+  <div class="container">
+    <div class="section-title">
+      <h2>رفاهك يبدأ بخطوة 🌿</h2>
+      <p>امنحي نفسك لحظات صغيرة من العناية والاهتمام.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <h3>🌸 استراحة واعية</h3>
+        <p>خذي دقائق للتنفس بهدوء والابتعاد عن ضغط المهام.</p>
+      </article>
+      <article class="card">
+        <h3>🤍 كلمة طيبة</h3>
+        <p>عبّري عن امتنانك لزميلة، فقد تصنع كلماتك فرقًا كبيرًا.</p>
+      </article>
+      <article class="card">
+        <h3>🌱 توازن يومي</h3>
+        <p>رتّبي أولوياتك وامنحي وقتًا للراحة كما تمنحين وقتًا للعمل.</p>
+      </article>
+    </div>
   </div>
 </section>
 
 <section id="participate">
-  <div class="section-title">
-    <h2>كوني جزءًا من أثَر 💗</h2>
-    <p>كل مشاركة صادقة قد تكون بداية لشيء جميل.</p>
-  </div>
-  <div class="card" style="max-width:600px;margin:auto;text-align:center">
-    <p>شاركي فكرة أو كلمة امتنان أو رسالة تقدير.</p>
-    <p>ستُضاف خاصية إرسال المشاركات وحفظها بعد تجهيز قاعدة البيانات.</p>
+  <div class="container">
+    <div class="section-title">
+      <h2>كوني جزءًا من أثَر 💗</h2>
+      <p>كل مشاركة صادقة قد تكون بداية لشيء جميل.</p>
+    </div>
+    <form class="panel" id="shareForm">
+      <label for="kind">نوع المشاركة</label>
+      <select id="kind" required>
+        <option value="لحظة ملهمة">لحظة ملهمة</option>
+        <option value="رسالة تقدير">رسالة تقدير</option>
+        <option value="فكرة للرفاه المهني">فكرة للرفاه المهني</option>
+      </select>
+      <label for="sender">اسمك (اختياري)</label>
+      <input id="sender" maxlength="60" placeholder="اكتبي اسمك إن رغبتِ">
+      <label for="message">مشاركتك</label>
+      <textarea id="message" maxlength="1500" required placeholder="شاركي فكرة أو كلمة طيبة..."></textarea>
+      <button class="button" type="submit">احفظي المشاركة على هذا الجهاز</button>
+      <p class="notice">تنبيه: هذه النسخة تحفظ المشاركات على الجهاز والمتصفح الحالي فقط، ولا ترسلها إلى إدارة الموقع أو تجمعها من أجهزة الزائرات الأخرى.</p>
+      <div id="result" aria-live="polite"></div>
+    </form>
   </div>
 </section>
+
+<section>
+  <div class="container panel" style="text-align:center">
+    <h2 style="color:var(--rose)">رسالة أثَر 🤍</h2>
+    <p>«قد لا نعرف حجم الأثر الذي نتركه، لكن الكلمة الطيبة تبقى».</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>أثَر ♡</strong>
+  <p>معًا نصنع أثرًا طيبًا يدوم.</p>
+</footer>
+
+<script>
+const form = document.getElementById('shareForm');
+const result = document.getElementById('result');
+
+function showMessages() {
+  result.replaceChildren();
+  let messages = [];
+  try {
+    messages = JSON.parse(localStorage.getItem('atharMessages') || '[]');
+  } catch (e) {
+    messages = [];
+  }
+
+  if (!messages.length) return;
+
+  const heading = document.createElement('h3');
+  heading.textContent = 'مشاركات محفوظة على هذا الجهاز';
+  result.appendChild(heading);
+
+  messages.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'message';
+
+    const title = document.createElement('strong');
+    title.textContent = item.kind;
+    card.appendChild(title);
+
+    const body = document.createElement('p');
+    body.textContent = item.message;
+    card.appendChild(body);
+
+    if (item.sender) {
+      const sender = document.createElement('small');
+      sender.textContent = 'من: ' + item.sender;
+      card.appendChild(sender);
+    }
+
+    result.appendChild(card);
+  });
+}
+
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const item = {
+    kind: document.getElementById('kind').value,
+    sender: document.getElementById('sender').value.trim(),
+    message: document.getElementById('message').value.trim()
+  };
+
+  if (!item.message) return;
+
+  try {
+    const messages = JSON.parse(localStorage.getItem('atharMessages') || '[]');
+    messages.unshift(item);
+    localStorage.setItem('atharMessages', JSON.stringify(messages));
+    form.reset();
+    showMessages();
+    const confirmation = document.createElement('p');
+    confirmation.textContent = 'تم حفظ مشاركتك على هذا الجهاز بنجاح 🤍';
+    result.prepend(confirmation);
+  } catch (e) {
+    alert('تعذر الحفظ في هذا المتصفح. جربي مرة أخرى.');
+  }
+});
+
+showMessages();
+</script>
+</body>
+</html>
